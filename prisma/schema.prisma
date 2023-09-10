@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model AcademicSemister {
+  id String @id @default(uuid())
+  year Int 
+  tittle String
+  code String
+  startMonth String 
+  endMonth String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  students student[]
+
+  @@map("academic_semisters")
+}
+
+model AcademicFaculty {
+  id String @id @default(uuid())
+  title String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  acamdemicDepartment  AcamdemicDepartment[]
+  
+  student student[]
+   faculty faculty[]
+   @@map("academic_faculty")
+}
+
+
+model AcamdemicDepartment {
+
+ id String @id @default(uuid())
+ titile String 
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt 
+ academicFacultyId String @unique
+ academicFaculty AcademicFaculty? @relation(fields: [academicFacultyId], references: [id])
+ 
+ faculty faculty[]
+ students student[]
+
+@@map("academic_departments")
+
+}
+
+
+model student {
+ id String @id @default(uuid())
+ studentId String 
+ firstName String
+ lastName String
+ middleName String 
+ profileImage String
+ email String 
+ ContactNo String
+ gneder String 
+ bloodgroup String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt 
+
+ academicSemisters AcademicSemister? @relation(fields: [academicSemisterId], references: [id])
+ academicSemisterId String
+
+ academicDepartment AcamdemicDepartment? @relation(fields: [academicDepartmentId], references: [id])
+ academicDepartmentId String
+
+ academicFacutly AcademicFaculty? @relation(fields: [academicFacultyId], references: [id])
+ academicFacultyId String 
+
+
+ @@map("students")
+}
+
+
+
+
+model faculty {
+ id String @id @default(uuid())
+ facultyId String
+ firstName String
+ lastName String
+ middleName String 
+ profileImage String
+ email String 
+ ContactNo String
+ gneder String 
+ bloodgroup String
+ designation String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt 
+
+ academicDepartment AcamdemicDepartment? @relation(fields: [academicDepartmentId], references: [id])
+ academicDepartmentId String
+
+ academicFaculty AcademicFaculty? @relation(fields: [academicFacultyId], references: [id])
+ academicFacultyId String
+
+ @@map("faculties")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
